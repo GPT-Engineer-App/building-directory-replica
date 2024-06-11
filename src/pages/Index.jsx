@@ -1,18 +1,34 @@
+import { useState } from "react";
 import { Box, Container, Flex, Heading, HStack, IconButton, Image, Input, InputGroup, InputLeftElement, Spacer, Text, VStack } from "@chakra-ui/react";
 import { FaSearch, FaGlobe, FaUserCircle } from "react-icons/fa";
 
-const buildings = [
-  { name: "Building Name", address: "Address", image: "/images/building1.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building2.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building3.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building4.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building5.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building6.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building7.jpg" },
-];
+const generateRandomBuildings = (num) => {
+  const buildings = [];
+  for (let i = 0; i < num; i++) {
+    buildings.push({
+      name: `Building ${i + 1}`,
+      address: `Address ${i + 1}, City ${i + 1}`,
+      image: `/images/building${(i % 7) + 1}.jpg`,
+    });
+  }
+  return buildings;
+};
 
 const Index = () => {
-  return (
+  const [searchQuery, setSearchQuery] = useState("");
+  const [buildings, setBuildings] = useState(generateRandomBuildings(20));
+
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredBuildings = buildings.filter(
+    (building) =>
+      building.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      building.address.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+return (
     <Container maxW="container.xl" py={4}>
       <Flex justify="space-between" align="center" mb={4}>
         <HStack spacing={4}>
@@ -36,10 +52,15 @@ const Index = () => {
       </Box>
       <InputGroup mb={8}>
         <InputLeftElement pointerEvents="none" children={<FaSearch color="gray.300" />} />
-        <Input type="text" placeholder="Search by name, address or city..." />
+        <Input
+          type="text"
+          placeholder="Search by name, address or city..."
+          value={searchQuery}
+          onChange={handleSearch}
+        />
       </InputGroup>
       <VStack spacing={4} align="stretch">
-        {buildings.map((building, index) => (
+        {filteredBuildings.map((building, index) => (
           <Flex key={index} align="center" p={4} borderWidth="1px" borderRadius="md" boxShadow="sm">
             <Image src={building.image} alt={building.name} boxSize="60px" borderRadius="md" mr={4} />
             <Box>
