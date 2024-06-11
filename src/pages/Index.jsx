@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Box, Container, Flex, Heading, HStack, IconButton, Image, Input, InputGroup, InputLeftElement, Spacer, Text, VStack } from "@chakra-ui/react";
 import { FaSearch, FaGlobe, FaUserCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const generateRandomBuildings = (num) => {
   const buildings = [];
   for (let i = 0; i < num; i++) {
     buildings.push({
+      id: i + 1,
       name: `Building ${i + 1}`,
       address: `Address ${i + 1}, City ${i + 1}`,
       image: `/images/building${(i % 7) + 1}.jpg`,
@@ -28,7 +30,7 @@ const Index = () => {
       building.address.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-return (
+  return (
     <Container maxW="container.xl" py={4}>
       <Flex justify="space-between" align="center" mb={4}>
         <HStack spacing={4}>
@@ -68,7 +70,9 @@ return (
               <Text color="gray.500">{building.address}</Text>
             </Box>
             <Spacer />
-            <IconButton aria-label="View" icon={<Text>View</Text>} />
+            <Link to={`/building/${building.id}`}>
+              <IconButton aria-label="View" icon={<Text>View</Text>} />
+            </Link>
           </Flex>
         ))}
       </VStack>
