@@ -1,5 +1,6 @@
 import { Box, Container, Heading, Image, Text } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
+import KanbanBoard from '../components/KanbanBoard';
 
 const buildings = [
   { id: 1, name: "Building 1", address: "Address 1, City 1", image: "/images/building1.jpg" },
@@ -26,6 +27,10 @@ const BuildingDetail = () => {
         <Text fontSize="lg" color="gray.600">{building.address}</Text>
       </Box>
       <Image src={building.image} alt={building.name} borderRadius="md" />
+      <Box mt={8}>
+        <Heading as="h2" size="lg" mb={4}>Maintenance Tasks</Heading>
+        <KanbanBoard />
+      </Box>
     </Container>
   );
 };
