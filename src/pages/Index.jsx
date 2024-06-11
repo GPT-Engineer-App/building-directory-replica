@@ -1,17 +1,37 @@
 import { Box, Container, Flex, Heading, HStack, IconButton, Image, Input, InputGroup, InputLeftElement, Spacer, Text, VStack } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { faker } from "@faker-js/faker";
 import { FaSearch, FaGlobe, FaUserCircle } from "react-icons/fa";
 
-const buildings = [
-  { name: "Building Name", address: "Address", image: "/images/building1.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building2.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building3.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building4.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building5.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building6.jpg" },
-  { name: "Building Name", address: "Address", image: "/images/building7.jpg" },
-];
+const [buildings, setBuildings] = useState([]);
+const [searchTerm, setSearchTerm] = useState("");
+
+useEffect(() => {
+  const generateBuildings = () => {
+    const buildingsArray = [];
+    for (let i = 0; i < 20; i++) {
+      buildingsArray.push({
+        name: faker.company.companyName(),
+        address: faker.address.streetAddress(),
+        image: `/images/building${(i % 7) + 1}.jpg`,
+      });
+    }
+    setBuildings(buildingsArray);
+  };
+
+  generateBuildings();
+}, []);
 
 const Index = () => {
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredBuildings = buildings.filter((building) =>
+    building.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    building.address.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Container maxW="container.xl" py={4}>
       <Flex justify="space-between" align="center" mb={4}>
@@ -36,10 +56,10 @@ const Index = () => {
       </Box>
       <InputGroup mb={8}>
         <InputLeftElement pointerEvents="none" children={<FaSearch color="gray.300" />} />
-        <Input type="text" placeholder="Search by name, address or city..." />
+        <Input type="text" placeholder="Search by name, address or city..." value={searchTerm} onChange={handleSearch} />
       </InputGroup>
       <VStack spacing={4} align="stretch">
-        {buildings.map((building, index) => (
+        {filteredBuildings.map((building, index) => (
           <Flex key={index} align="center" p={4} borderWidth="1px" borderRadius="md" boxShadow="sm">
             <Image src={building.image} alt={building.name} boxSize="60px" borderRadius="md" mr={4} />
             <Box>
